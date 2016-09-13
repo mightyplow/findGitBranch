@@ -4,7 +4,7 @@ function findGitBranch {
   local passedBranch=${1:-latest}
 
   # branch_name gets exposed to the containing shell
-  branch_name='develop'
+  FOUND_BRANCH='develop'
 
   if [[ "$passedBranch" == "latest" ]]; then
     echo "searching branch with last commit..."
@@ -13,8 +13,8 @@ function findGitBranch {
     echo "branch with last commit is $latestBranch"
     
     # remove the origin part from the branch name since it's a remote branch
-    branch_name="${latestBranch/origin\//}"
-    echo "use $branch_name as branch name"
+    FOUND_BRANCH="${latestBranch/origin\//}"
+    echo "use $FOUND_BRANCH as branch name"
   else
     # Note: this only looks in remote branches
 
@@ -24,7 +24,7 @@ function findGitBranch {
     
     if [[ -n "$foundBranch" ]]; then
       # remove the origin part in the branch name
-      branch_name=${foundBranch/origin\//}
+      FOUND_BRANCH=${foundBranch/origin\//}
     else
       local namespaceBranch="${passedBranch/\/*/}"
       echo "exact branch $passedBranch not found. looking for namespace branch $namespaceBranch"
@@ -33,7 +33,7 @@ function findGitBranch {
 
       if [[ -n "$foundBranch" ]]; then
         # remove the origin part in the branch name
-        branch_name=${foundBranch/origin\//}
+        FOUND_BRANCH=${foundBranch/origin\//}
 
         echo "found branch with namespace $namespaceBranch: $foundBranch"
       else
@@ -43,7 +43,7 @@ function findGitBranch {
   fi
 
   # remove whitespaces
-  branch_name=${branch_name//[[:blank:]]/}
+  FOUND_BRANCH=${FOUND_BRANCH//[[:blank:]]/}
 
-  echo "found branch is $branch_name"
+  echo "found branch is $FOUND_BRANCH"
 }
