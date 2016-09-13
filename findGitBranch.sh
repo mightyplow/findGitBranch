@@ -2,7 +2,7 @@
 
 function find_git_branch {
   local passedBranch=${1:-latest}
-  local remoteName=${2:-$remoteName}
+  local remoteName=${2:-origin}
 
   # branch_name gets exposed to the containing shell
   FOUND_BRANCH='develop'
