@@ -2,6 +2,7 @@
 
 function find_git_branch {
   local passedBranch=${1:-latest}
+  local remoteName=${2:-$remoteName}
 
   # branch_name gets exposed to the containing shell
   FOUND_BRANCH='develop'
@@ -12,8 +13,8 @@ function find_git_branch {
     local latestBranch=`git for-each-ref --sort=-committerdate --format="%(refname:short)" --count 1`
     echo "branch with last commit is $latestBranch"
     
-    # remove the origin part from the branch name since it's a remote branch
-    FOUND_BRANCH="${latestBranch/origin\//}"
+    # remove the $remoteName part from the branch name since it's a remote branch
+    FOUND_BRANCH="${latestBranch/$remoteName\//}"
     echo "use $FOUND_BRANCH as branch name"
   else
     # Note: this only looks in remote branches
@@ -23,8 +24,8 @@ function find_git_branch {
     local foundBranch=`git branch -r | grep -Em 1 "\b$passedBranch$"`
     
     if [[ -n "$foundBranch" ]]; then
-      # remove the origin part in the branch name
-      FOUND_BRANCH=${foundBranch/origin\//}
+      # remove the $remoteName part in the branch name
+      FOUND_BRANCH=${foundBranch/$remoteName\//}
     else
       local namespaceBranch="${passedBranch/\/*/}"
       echo "exact branch $passedBranch not found. looking for namespace branch $namespaceBranch"
@@ -32,8 +33,8 @@ function find_git_branch {
       foundBranch=`git branch -r | grep -Em 1 "\b$namespaceBranch"`
 
       if [[ -n "$foundBranch" ]]; then
-        # remove the origin part in the branch name
-        FOUND_BRANCH=${foundBranch/origin\//}
+        # remove the $remoteName part in the branch name
+        FOUND_BRANCH=${foundBranch/$remoteName\//}
 
         echo "found branch with namespace $namespaceBranch: $foundBranch"
       else

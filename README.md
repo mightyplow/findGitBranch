@@ -13,6 +13,9 @@ Let's say, the release branch of A gets an update and therefore the release bran
 This script provides a function called find_git_branch which accepts an optional parameter for the branch name to be found.
 If this parameter is not set, then internally 'latest' gets used which let's the script look for the git branch with the last commit.
 
+Since the script tries to find the branch in the remote branches, a remote name is required. This can be passed as the second parameter.
+If it's not given, 'origin' gets used. 
+
 ## How it works
 
 - if 'latest' or no branch name is passed to the function, then the script looks for the git branch with the last commit
