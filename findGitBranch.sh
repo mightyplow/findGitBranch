@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function findGitBranch {
+function find_git_branch {
   local passedBranch=${1:-latest}
 
   # branch_name gets exposed to the containing shell
