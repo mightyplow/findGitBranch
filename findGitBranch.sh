@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
 function find_git_branch {
+  if [ ! -d .git ]; then
+    echo "this seems not to be a git repository"
+    return 1;
+  fi
+
   local passedBranch=${1:-latest}
   local remoteName=${2:-origin}
 
   # branch_name gets exposed to the containing shell
   FOUND_BRANCH='develop'
 
-  if [[ "$passedBranch" == "latest" ]]; then
+  if [ "$passedBranch" == "latest" ]; then
     echo "searching branch with last commit..."
 
     local latestBranch=`git for-each-ref --sort=-committerdate --format="%(refname:short)" --count 1`
@@ -23,7 +28,7 @@ function find_git_branch {
     echo "looking for exact branch $passedBranch"
     local foundBranch=`git branch -r | grep -Em 1 "\b$passedBranch$"`
     
-    if [[ -n "$foundBranch" ]]; then
+    if [ -n "$foundBranch" ]; then
       # remove the $remoteName part in the branch name
       FOUND_BRANCH=${foundBranch/$remoteName\//}
     else
@@ -32,7 +37,7 @@ function find_git_branch {
 
       foundBranch=`git branch -r | grep -Em 1 "\b$namespaceBranch"`
 
-      if [[ -n "$foundBranch" ]]; then
+      if [ -n "$foundBranch" ]; then
         # remove the $remoteName part in the branch name
         FOUND_BRANCH=${foundBranch/$remoteName\//}
 
